@@ -27,7 +27,7 @@ contactApi.getAgenda = async (slug) => {
     }
 }
 
-contactApi.createNewAgenda = async ({slug}) => {
+contactApi.createNewAgenda = async ({ slug }) => {
     try {
         const resp = await fetch(`${url}/agendas/${slug}`, {
             method: "POST",
@@ -36,7 +36,7 @@ contactApi.createNewAgenda = async ({slug}) => {
             },
         });
 
-        if (!resp.ok) throw new Error('error fetching posts')
+        if (!resp.ok) throw new Error('Error fetching posts')
         const data = await resp.json()
         return data
 
@@ -45,5 +45,17 @@ contactApi.createNewAgenda = async ({slug}) => {
     }
 }
 
+contactApi.deleteAgenda = async ( slug ) => {
+    try {
+        const resp = await fetch(`${url}/agendas/${slug}`, {
+            method: "DELETE",
+        });
+        if (!resp.ok) throw new Error("Error deleting ");
+        const data = await resp.json()
+        return data
+    } catch (error) {
+        return error
+    }
+}
 
 export default contactApi

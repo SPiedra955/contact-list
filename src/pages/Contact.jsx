@@ -3,6 +3,8 @@ import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import contactApi from '../services/contactApi.js'
 import CreateAgenda from '../components/CreateAgenda.jsx'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrash, faCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 
 export const Contact = () => {
 
@@ -55,6 +57,15 @@ export const Contact = () => {
         })
     }
 
+    const deleteInfo = async (slug) => {
+        const deletedRecord = await contactApi.deleteAgenda(slug);
+        dispatch({
+            type: 'deleteAgenda',
+            payload: { deleteRegister: deletedRecord }
+        });
+    };
+
+
     return (
         <div className="text-center mt-5">
             <h1>Agendas</h1>
@@ -62,7 +73,7 @@ export const Contact = () => {
             <ul>
                 {store.agendas?.map((ele, index) => (
                     <li key={`${ele.id}-${index}`} onClick={() => selectAgenda(ele.slug)}>
-                        {ele.slug}
+                        {ele.slug}<button onClick={() => deleteInfo(ele.slug)}>Borrar<FontAwesomeIcon icon={faTrash} /></button>
                     </li>
                 ))}
             </ul>
