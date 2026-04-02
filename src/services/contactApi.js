@@ -14,4 +14,18 @@ contactApi.getUser = async () => {
     }
 }
 
+contactApi.getAgenda = async (slug) => {
+    try {
+        const resp = await fetch(`${url}/agendas/${slug}`)
+        if (!resp.ok) throw new Error('Something went wrong')
+        const data = await resp.json()
+        console.log(data)
+
+        return data
+    } catch (error) {
+        return error
+    }
+}
+
+
 export default contactApi
