@@ -19,11 +19,25 @@ export const initialStore = () => {
 export default function storeReducer(store, action = {}) {
   switch (action.type) {
 
-    case 'getAgendas':
-      const { agendas } = action.payload
+
+    case 'createAgenda':
+      const { newSlug } = action.payload
       return {
         ...store,
-        agendas
+        newSlug: [...store.agendas, newSlug]
+      }
+
+    case 'selectContact':
+      const { selected } = action.payload
+      return {
+        ...store,
+        selected
+      }
+
+    case 'setContacts':
+      return {
+        ...store,
+        contacts: action.payload.contacts
       }
 
     case 'selectAgenda':
@@ -33,11 +47,14 @@ export default function storeReducer(store, action = {}) {
         agenda
       }
 
-    case 'setContacts':
+
+    case 'getAgendas':
+      const { agendas } = action.payload
       return {
         ...store,
-        contacts: action.payload.contacts
+        agendas
       }
+
 
     case 'add_task':
 

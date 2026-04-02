@@ -7,7 +7,6 @@ contactApi.getUser = async () => {
         if (!resp.ok) throw new Error('Something went wrong')
         const data = await resp.json()
         console.log(data)
-
         return data
     } catch (error) {
         return error
@@ -15,6 +14,7 @@ contactApi.getUser = async () => {
 }
 
 contactApi.getAgenda = async (slug) => {
+
     try {
         const resp = await fetch(`${url}/agendas/${slug}`)
         if (!resp.ok) throw new Error('Something went wrong')
@@ -22,6 +22,24 @@ contactApi.getAgenda = async (slug) => {
         console.log(data)
 
         return data
+    } catch (error) {
+        return error
+    }
+}
+
+contactApi.createNewAgenda = async ({slug}) => {
+    try {
+        const resp = await fetch(`${url}/agendas/${slug}`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (!resp.ok) throw new Error('error fetching posts')
+        const data = await resp.json()
+        return data
+
     } catch (error) {
         return error
     }
