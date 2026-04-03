@@ -5,20 +5,22 @@ import contactApi from '../services/contactApi.js'
 import CreateAgenda from '../components/CreateAgenda.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { useParams } from "react-router-dom";
 
 export const Contact = () => {
 
     const { store, dispatch } = useGlobalReducer()
     const [contacts, setContacts] = useState([])
+    const [agendas, setAgendas] = useState([])
+    const { slug } = useParams()
 
     useEffect(() => {
-        contactApi.getUser().then(data => dispatch({
-            type: 'getAgendas',
-            payload: {
-                agendas: data.agendas
-            }
-        }))
-    }, [])
+        if (slug) {
+            contactApi.getUserContacts(slug).then(data => {
+                setContacts(data.contacts || data);
+            });
+        }
+    }, [slug]);
 
     const selectAgenda = (slug) => {
         dispatch({
@@ -29,61 +31,16 @@ export const Contact = () => {
         })
     }
 
-    useEffect(() => {
-        // Comprobamos que nos lleguen los datos del GET si no devolvemos nada
-        if (!store.agenda) return;
-        contactApi.getAgenda(store.agenda)
-            .then(data => {
-                // Si tenemos datos los pasamos al store
-                if (data && data.contacts) {
-                    dispatch({
-                        type: 'setContacts',
-                        payload: { contacts: data.contacts }
-                    });
-                    // Si los datos son null o undefined devolvemos un array vacío
-                } else {
-                    dispatch({
-                        type: 'setContacts',
-                        payload: { contacts: [] }
-                    });
-                }
-            })
-    }, [store.agenda])
-
-    const selectedContact = (contact) => {
-        dispatch({
-            type: 'selectContact',
-            payload: contact
-        })
-    }
-
-    const deleteInfo = async (slug) => {
-        const deletedRecord = await contactApi.deleteAgenda(slug);
-        dispatch({
-            type: 'deleteAgenda',
-            payload: { deleteRegister: deletedRecord }
-        });
-    };
-
-
     return (
-        <div className="text-center mt-5">
-            <h1>Agendas</h1>
-
+        <div className="text-center mt-5 container">
+            <h1>Contacts </h1>
             <ul>
-                {store.agendas?.map((ele, index) => (
-                    <li key={`${ele.id}-${index}`} onClick={() => selectAgenda(ele.slug)}>
-                        {ele.slug}<button onClick={() => deleteInfo(ele.slug)}>Borrar<FontAwesomeIcon icon={faTrash} /></button>
+                {contacts.map(contact => (
+                    <li key={contact.id}>
+                        {contact.name}
                     </li>
                 ))}
             </ul>
-            <h3>Contacts</h3>
-            <ul>
-                {store.contacts?.map(el => <li key={el.id} onClick={() => selectedContact(el)}> {el.name}</li>)}
-            </ul>
-            <h3>Crear agenda</h3>
-
-            <CreateAgenda></CreateAgenda>
         </div>
     );
 }; 

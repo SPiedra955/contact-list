@@ -20,10 +20,9 @@ export default function storeReducer(store, action = {}) {
   switch (action.type) {
 
     case 'deleteAgenda':
-      const { deleteRegister } = action.payload
       return {
         ...store,
-        agendas: store.agendas.filter(agenda => agenda.id != deleteRegister)
+        agendas: store.agendas.filter(agenda => agenda.slug != action.payload.deleteRegister.slug)
       }
 
     case 'createAgenda':
