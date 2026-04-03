@@ -79,9 +79,7 @@ contactApi.createNewUserContact = async ({ slug, contact }) => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(contact)
-
         });
-
         if (!resp.ok) throw new Error('Error fetching posts')
         const data = await resp.json()
         return data

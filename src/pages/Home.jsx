@@ -45,13 +45,6 @@ export const Home = () => {
 			})
 	}, [store.agenda])
 
-	const selectedContact = (contact) => {
-		dispatch({
-			type: 'selectContact',
-			payload: contact
-		})
-	}
-
 	const deleteInfo = async (slug) => {
 		await contactApi.deleteAgenda(slug);
 		const data = await contactApi.getUser();

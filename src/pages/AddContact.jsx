@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import contactApi from '../services/contactApi.js'
 import { useEffect, useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
+import { Link, useNavigate } from "react-router-dom";
 
 export function AddContact() {
     const [formData, setFormData] = useState({
@@ -13,18 +14,19 @@ export function AddContact() {
     const { slug } = useParams()
     const [contacts, setContacts] = useState([])
     const { store, dispatch } = useGlobalReducer()
+    const navigate = useNavigate()
 
     const sendData = async (e) => {
         e.preventDefault()
         if (formData.name.trim().length < 6 || formData.phone.trim().length < 6
             || formData.email.trim().length < 6 || formData.address.trim().length < 6)
-            return alert('datos incorrectos')
+            return alert('Datos incorrectos: cada campo debe tener al menos 6 caracteres')
         const data = await contactApi.createNewUserContact({ slug, contact: formData })
 
         dispatch({
             type: 'createNewAgendaContact',
             payload: {
-                newContact: data.agendas
+                contacts: data.contacts
             }
         })
         setFormData({
@@ -33,9 +35,12 @@ export function AddContact() {
             email: '',
             address: ''
         });
+        alert('¡Contacto creado correctamente!')
     }
 
-
+    const goBack = () => {
+        navigate(`/contacts/${slug}`)
+    };
 
     return (
         <div className="container">
@@ -43,7 +48,7 @@ export function AddContact() {
                 Add Contact
             </h1>
 
-            <form>
+            <form onSubmit={sendData}>
                 <div className="mb-3">
                     <label htmlFor="fullName" className="form-label">Full Name</label>
                     <input type="text" className="form-control" id="fullName" value={formData.name} name="fullName" onChange={(e) => setFormData({
@@ -73,8 +78,10 @@ export function AddContact() {
                     })} />
                 </div>
 
-                <div class="d-grid gap-2">
-                    <button class="btn btn-primary" type="button">Save</button>
+                <div className="d-grid gap-2">
+                    <button className="btn btn-primary" type="submit">Save</button>
+                    <button className="btn btn-secondary" type="button" onClick={goBack}>Back to Contacts</button>
+
                 </div>
             </form>
 
