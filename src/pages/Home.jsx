@@ -4,7 +4,7 @@ import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import contactApi from '../services/contactApi.js'
 import CreateAgenda from '../components/CreateAgenda.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrash, faCheck, faCircleXmark } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Home = () => {
@@ -63,23 +63,30 @@ export const Home = () => {
 		});
 	};
 
-
 	return (
 		<div className="text-center mt-5 container">
-			<h1>Agenda API</h1>
-			<h2 className="mt-5">Select an agenda</h2>
-			<select className="form-select form-select-lg mt-4"
-				aria-label=".form-select-lg example"
-				value=""
-				onChange={(e) => navigate(`/contacts/${e.target.value}`)}>
-				{store.agendas?.map((ele, index) => (
-					<option key={`${ele.id}-${index}`} value={ele.slug} >
-						{ele.slug}
-					</option>
+			<h1 className="text-center mb-4 fw-bold">Agenda API</h1>
+			<h4 className="text-muted mb-3 text-center">Select an agenda</h4>
+			<div className="mt-4">
+				{store.agendas?.map((ele) => (
+					<div
+						key={ele.id}
+						className="d-flex justify-content-between align-items-center border p-2">
+						<span onClick={() => navigate(`/contacts/${ele.slug}`)} style={{ cursor: "pointer" }}>
+							{ele.slug}
+						</span>
+						<div className="d-flex gap-2">
+							<button className="btn btn-outline-primary btn-sm" onClick={() => navigate(`/contacts/${ele.slug}`)}>
+								<FontAwesomeIcon icon={faEye} /> Contacts
+							</button>
+							<button onClick={() => deleteInfo(ele.slug)} className="btn btn-outline-danger btn-sm"
+							><FontAwesomeIcon icon={faTrash} /> Delete</button>
+						</div>
+					</div>
 				))}
-			</select>
+			</div>
 
-			<h2 className="mt-4">Or create new agenda</h2>
+			<h4 className="text-muted mb-3 mt-4">Or create new agenda</h4>
 
 			<CreateAgenda></CreateAgenda>
 		</div>
