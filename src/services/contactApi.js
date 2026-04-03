@@ -88,4 +88,22 @@ contactApi.createNewUserContact = async ({ slug, contact }) => {
         return error
     }
 }
+
+contactApi.UpdateUserContact = async ({ slug, contactId, formData }) => {
+    try {
+        const resp = await fetch(`${url}/agendas/${slug}/contacts/${contactId}`, {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+        if (!resp.ok) throw new Error('Error updating posts')
+        const data = await resp.json()
+        return data
+
+    } catch (error) {
+        return error
+    }
+}
 export default contactApi
