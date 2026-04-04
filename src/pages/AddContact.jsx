@@ -18,9 +18,9 @@ export function AddContact() {
 
     const sendData = async (e) => {
         e.preventDefault()
-        if (formData.name.trim().length < 6 || formData.phone.trim().length < 6
-            || formData.email.trim().length < 6 || formData.address.trim().length < 6)
-            return alert('Datos incorrectos: cada campo debe tener al menos 6 caracteres')
+        if (formData.name.trim().length < 3 || formData.phone.trim().length < 3
+            || formData.email.trim().length < 3 || formData.address.trim().length < 3)
+            return alert('Datos incorrectos: cada campo debe tener al menos 3 caracteres')
         const data = await contactApi.createNewUserContact({ slug, contact: formData })
 
         dispatch({

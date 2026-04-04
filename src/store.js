@@ -19,6 +19,12 @@ export const initialStore = () => {
 export default function storeReducer(store, action = {}) {
   switch (action.type) {
 
+    case 'deleteContactInAgenda':
+      return {
+        ...store,
+        contacts: store.contacts.filter(contact => contact.id != Number(action.payload.id))
+      }
+
     case 'createNewAgendaContact':
       return {
         ...store,
@@ -27,7 +33,7 @@ export default function storeReducer(store, action = {}) {
     case 'deleteAgenda':
       return {
         ...store,
-        agendas: store.agendas.filter(agenda => agenda.slug != action.payload.deleteRegister.slug)
+        agendas: store.agendas.filter(agenda => agenda.slug != action.payload.slug)
       }
 
     case 'createAgenda':

@@ -106,4 +106,17 @@ contactApi.UpdateUserContact = async ({ slug, contactId, formData }) => {
         return error
     }
 }
+
+contactApi.deleteAgendaContact = async (slug, contact_id) => {
+    try {
+        const resp = await fetch(`${url}/agendas/${slug}/contacts/${contact_id}`, {
+            method: "DELETE",
+        });
+        if (!resp.ok) throw new Error("Error deleting ");
+        const data = await resp.json()
+        return data
+    } catch (error) {
+        return error
+    }
+}
 export default contactApi

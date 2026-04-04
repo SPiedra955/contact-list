@@ -11,17 +11,33 @@ import { Link, useNavigate } from "react-router-dom";
 export const Contact = () => {
 
     const { store, dispatch } = useGlobalReducer()
-    const [contacts, setContacts] = useState([])
     const { slug } = useParams()
+    const navigate = useNavigate()
+    const contacts = store.contacts || []
 
     useEffect(() => {
         if (slug) {
             contactApi.getUserContacts(slug).then(data => {
-                setContacts(data.contacts || data);
+                dispatch({
+                    type: 'setContacts',
+                    payload: {
+                        contacts: data.contacts || data
+                    }
+                })
             });
         }
-    }, [slug]);
-    const navigate = useNavigate()
+    }, [slug, dispatch]);
+
+
+    const deleteContact = async (contact_id) => {
+        await contactApi.deleteAgendaContact(slug, contact_id);
+        dispatch({
+            type: 'deleteContactInAgenda',
+            payload: {
+                id: contact_id
+            }
+        });
+    };
 
     return (
         <div className="text-center mt-5 container">
@@ -51,7 +67,7 @@ export const Contact = () => {
                         </div>
 
                         <div className="d-flex gap-3">
-                            <button className="btn btn-outline-danger btn-sm">
+                            <button className="btn btn-outline-danger btn-sm" onClick={() => deleteContact(String(contact.id))}>
                                 <FontAwesomeIcon icon={faTrash} /> Delete
                             </button>
                             <button className="btn btn-outline-primary btn-sm">
