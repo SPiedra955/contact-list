@@ -18,6 +18,7 @@ export const Contact = () => {
         email: '',
         address: ''
     })
+    const [idToUpdate, setIdToUpdate] = useState(null);
 
     useEffect(() => {
         if (slug) {
@@ -43,16 +44,33 @@ export const Contact = () => {
         });
     };
 
+    const handleOpenModal = (contact) => {
+        setIdToUpdate(contact.id)
+        setUpdateData({
+            name: contact.name || '',
+            phone: contact.phone || '',
+            email: contact.email || '',
+            address: contact.address || ''
+        });
+    };
 
-    const UpdateContact = async (contact_id) => {
-        await contactApi.UpdateUserContact(slug, contact_id, setUpdateData);
+    const UpdateContact = async (e) => {
+        e.preventDefault()
+        await contactApi.UpdateUserContact({
+            slug,
+            contactId: idToUpdate,
+            formData: updateData
+        });
+        const refreshedData = await contactApi.getUserContacts(slug);
+
         dispatch({
             type: 'setContacts',
             payload: {
-                contacts: data.contacts || data
+                contacts: refreshedData.contacts || refreshedData
             }
-        })
+        });
     }
+
 
     return (
         <div className="text-center mt-5 container">
@@ -70,8 +88,11 @@ export const Contact = () => {
                         className="border p-3 mb-3 d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center"
                     >
                         <div className="text-start mb-3 mb-md-0">
+                            <h4 >
+                                {contact.name}
+                            </h4>
                             <p className="mb-1">
-                                <FontAwesomeIcon icon={faLocationDot} /> {contact.name}
+                                <FontAwesomeIcon icon={faLocationDot} /> {contact.address}
                             </p>
                             <p className="mb-1">
                                 <FontAwesomeIcon icon={faPhone} /> {contact.phone}
@@ -87,7 +108,8 @@ export const Contact = () => {
                             </button>
                             <button className="btn btn-outline-primary btn-sm"
                                 data-bs-toggle="modal"
-                                data-bs-target="#updateModal"
+                                data-bs-target={`#updateModal-${contact.id}`}
+                                onClick={() => handleOpenModal(contact)}
                             >
                                 <FontAwesomeIcon icon={faPen} /> Update
                             </button>
@@ -95,7 +117,7 @@ export const Contact = () => {
                         {/* Modal */}
                         <div
                             className="modal fade"
-                            id="updateModal"
+                            id={`updateModal-${contact.id}`}
                             tabIndex="-1"
                             aria-labelledby="updateModalLabel"
                             aria-hidden="true"
@@ -103,7 +125,7 @@ export const Contact = () => {
                             <div className="modal-dialog">
                                 <div className="modal-content">
                                     <div className="modal-header">
-                                        <h1 className="modal-title fs-5" id="updateModalLabel">New message</h1>
+                                        <h1 className="modal-title fs-5" id="updateModalLabel">Update contact</h1>
                                         <button
                                             type="button"
                                             className="btn-close"
@@ -116,32 +138,33 @@ export const Contact = () => {
                                         <form onSubmit={UpdateContact}>
                                             <div className="mb-3 text-start">
                                                 <label htmlFor="name" className="form-label">Name</label>
-                                                <input type="text" className="form-control" id="contactName" value={contact.name} name="name"
+                                                <input type="text" className="form-control" id="contactName" value={updateData.name} name="name"
                                                     onChange={(e) => setUpdateData({ ...updateData, name: e.target.value })} />
                                             </div>
                                             <div className="mb-3 text-start">
                                                 <label htmlFor="email" className="form-label">Email</label>
-                                                <input type="email" className="form-control" id="email" value={contact.email} name="email"
+                                                <input type="email" className="form-control" id="email" value={updateData.email} name="email"
                                                     onChange={(e) => setUpdateData({ ...updateData, email: e.target.value })} />
                                             </div>
                                             <div className="mb-3 text-start">
                                                 <label htmlFor="phone" className="form-label">Phone</label>
-                                                <input type="tel" className="form-control" id="phone" value={contact.phone} name="phone"
+                                                <input type="tel" className="form-control" id="phone" value={updateData.phone} name="phone"
                                                     onChange={(e) => setUpdateData({ ...updateData, phone: e.target.value })} />
                                             </div>
                                             <div className="mb-3 text-start">
                                                 <label htmlFor="address" className="form-label">Address</label>
-                                                <input type="text" className="form-control" id="address" value={contact.address} name="address"
+                                                <input type="text" className="form-control" id="address" value={updateData.address} name="address"
                                                     onChange={(e) => setUpdateData({ ...updateData, address: e.target.value })} />
+                                            </div>
+                                            <div className="modal-footer border-0">
+                                                <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                                    Close
+                                                </button>
+                                                <button type="submit" className="btn btn-primary">Update</button>
                                             </div>
                                         </form>
                                     </div>
-                                    <div className="modal-footer">
-                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
-                                            Cancelar
-                                        </button>
-                                        <button type="submit" className="btn btn-primary">Actualizar</button>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>

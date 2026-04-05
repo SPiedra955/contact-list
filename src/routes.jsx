@@ -11,7 +11,6 @@ import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
 import { AddContact } from "./pages/AddContact";
 import { Contact } from "./pages/Contact";
-import { UpdateContact } from "./pages/UpdateContact"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
