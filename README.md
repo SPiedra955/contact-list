@@ -14,20 +14,10 @@ Used by 4Geeks.com and 4Geeks Academy students, this template helps to bootstrap
 3. Start coding! and the vite dev server with live reload by typing: `$ npm run start`
 
 
-### Styling
-
-You can update the `./index.css` or create new `.css` files and import them into your current css or js files depending on your needs.
-
-### Components
-
-Add more files into your `./src/components` or styles folder as you need them and import them into your current files as needed.
-
-💡Note: There is an example using the Context API inside `pages/demo.js`;
-
 ### Pages
 
-Add more files into your `./js/pages` and import them in `./routes.jsx`.
-Each page must match at least one route inside `routes.jsx`
+Expected output
+- <image src="./src/assets/img/preview.gif" alt="project">
 
 ### Centralized Store with useReducer
 
