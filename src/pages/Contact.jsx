@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import contactApi from '../services/contactApi.js'
-import CreateAgenda from '../components/CreateAgenda.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPhone, faLocationDot, faEnvelope, faPen, faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
+import { faPhone, faLocationDot, faEnvelope, faPen, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useParams } from "react-router-dom";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Contact = () => {
 
@@ -14,6 +12,12 @@ export const Contact = () => {
     const { slug } = useParams()
     const navigate = useNavigate()
     const contacts = store.contacts || []
+    const [updateData, setUpdateData] = useState({
+        name: '',
+        phone: '',
+        email: '',
+        address: ''
+    })
 
     useEffect(() => {
         if (slug) {
@@ -38,6 +42,17 @@ export const Contact = () => {
             }
         });
     };
+
+
+    const UpdateContact = async (contact_id) => {
+        await contactApi.UpdateUserContact(slug, contact_id, setUpdateData);
+        dispatch({
+            type: 'setContacts',
+            payload: {
+                contacts: data.contacts || data
+            }
+        })
+    }
 
     return (
         <div className="text-center mt-5 container">
@@ -67,17 +82,72 @@ export const Contact = () => {
                         </div>
 
                         <div className="d-flex gap-3">
-                            <button className="btn btn-outline-danger btn-sm" onClick={() => deleteContact(String(contact.id))}>
+                            <button className="btn btn-outline-danger btn-sm " onClick={() => deleteContact(String(contact.id))}>
                                 <FontAwesomeIcon icon={faTrash} /> Delete
                             </button>
-                            <button className="btn btn-outline-primary btn-sm">
+                            <button className="btn btn-outline-primary btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#updateModal"
+                            >
                                 <FontAwesomeIcon icon={faPen} /> Update
                             </button>
+                        </div>
+                        {/* Modal */}
+                        <div
+                            className="modal fade"
+                            id="updateModal"
+                            tabIndex="-1"
+                            aria-labelledby="updateModalLabel"
+                            aria-hidden="true"
+                        >
+                            <div className="modal-dialog">
+                                <div className="modal-content">
+                                    <div className="modal-header">
+                                        <h1 className="modal-title fs-5" id="updateModalLabel">New message</h1>
+                                        <button
+                                            type="button"
+                                            className="btn-close"
+                                            data-bs-dismiss="modal"
+                                            aria-label="Close"
+                                        ></button>
+                                    </div>
+                                    <div className="modal-body">
+                                        {/* Form */}
+                                        <form onSubmit={UpdateContact}>
+                                            <div className="mb-3 text-start">
+                                                <label htmlFor="name" className="form-label">Name</label>
+                                                <input type="text" className="form-control" id="contactName" value={contact.name} name="name"
+                                                    onChange={(e) => setUpdateData({ ...updateData, name: e.target.value })} />
+                                            </div>
+                                            <div className="mb-3 text-start">
+                                                <label htmlFor="email" className="form-label">Email</label>
+                                                <input type="email" className="form-control" id="email" value={contact.email} name="email"
+                                                    onChange={(e) => setUpdateData({ ...updateData, email: e.target.value })} />
+                                            </div>
+                                            <div className="mb-3 text-start">
+                                                <label htmlFor="phone" className="form-label">Phone</label>
+                                                <input type="tel" className="form-control" id="phone" value={contact.phone} name="phone"
+                                                    onChange={(e) => setUpdateData({ ...updateData, phone: e.target.value })} />
+                                            </div>
+                                            <div className="mb-3 text-start">
+                                                <label htmlFor="address" className="form-label">Address</label>
+                                                <input type="text" className="form-control" id="address" value={contact.address} name="address"
+                                                    onChange={(e) => setUpdateData({ ...updateData, address: e.target.value })} />
+                                            </div>
+                                        </form>
+                                    </div>
+                                    <div className="modal-footer">
+                                        <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" className="btn btn-primary">Actualizar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 ))}
             </div>
-
         </div>
     );
 }; 

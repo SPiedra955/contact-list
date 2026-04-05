@@ -1,17 +1,14 @@
-import { useEffect, useState } from "react";
-import rigoImageUrl from "../assets/img/rigo-baby.jpg";
+import { useEffect } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer.jsx";
 import contactApi from '../services/contactApi.js'
 import CreateAgenda from '../components/CreateAgenda.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash, faEye } from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export const Home = () => {
 
 	const { store, dispatch } = useGlobalReducer()
-	const [contacts, setContacts] = useState([])
-	const [agendas, setAgendas] = useState([])
 	const navigate = useNavigate()
 	useEffect(() => {
 		contactApi.getUser().then(data => dispatch({
@@ -78,9 +75,7 @@ export const Home = () => {
 					</div>
 				))}
 			</div>
-
 			<h4 className="text-muted mb-3 mt-4">Or create new agenda</h4>
-
 			<CreateAgenda></CreateAgenda>
 		</div>
 	);

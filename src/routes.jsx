@@ -11,6 +11,7 @@ import { Single } from "./pages/Single";
 import { Demo } from "./pages/Demo";
 import { AddContact } from "./pages/AddContact";
 import { Contact } from "./pages/Contact";
+import { UpdateContact } from "./pages/UpdateContact"
 
 export const router = createBrowserRouter(
   createRoutesFromElements(
@@ -29,7 +30,6 @@ export const router = createBrowserRouter(
       <Route path="/demo" element={<Demo />} />
       <Route path="/contacts/:slug" element={<Contact />} />
       <Route path="/add-contact/:slug" element={<AddContact />} />
-
     </Route>
   )
 );

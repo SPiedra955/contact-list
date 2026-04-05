@@ -1,8 +1,8 @@
 import { useParams } from "react-router-dom";
 import contactApi from '../services/contactApi.js'
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import useGlobalReducer from "../hooks/useGlobalReducer";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export function AddContact() {
     const [formData, setFormData] = useState({
@@ -12,7 +12,6 @@ export function AddContact() {
         address: ''
     })
     const { slug } = useParams()
-    const [contacts, setContacts] = useState([])
     const { store, dispatch } = useGlobalReducer()
     const navigate = useNavigate()
 
@@ -35,7 +34,7 @@ export function AddContact() {
             email: '',
             address: ''
         });
-        alert('¡Contacto creado correctamente!')
+        alert('Contacto creado!')
     }
 
     const goBack = () => {
